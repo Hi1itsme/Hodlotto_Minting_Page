@@ -5,10 +5,8 @@ import { MintingTierProps } from '../types';
 // Planet SVG icons
 const MoonIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-    <circle cx="12" cy="12" r="10"/>
-    <circle cx="9" cy="9" r="1" opacity="0.6"/>
-    <circle cx="15" cy="8" r="0.8" opacity="0.5"/>
-    <circle cx="7" cy="14" r="1.2" opacity="0.4"/>
+    {/* Colored circle background */}
+    <circle cx="12" cy="12" r="10" fill="currentColor"/>
   </svg>
 );
 
@@ -100,8 +98,8 @@ const MoonSilhouette = ({ className, style }: { className?: string; style?: Reac
       alt="Moon silhouette" 
       className="w-full h-full object-contain"
       style={{
-        filter: 'brightness(0.9) contrast(1.0)',
-        opacity: 0.8
+        filter: 'brightness(1.3) contrast(1.2)',
+        opacity: 0.95
       }}
     />
   </div>
@@ -393,8 +391,8 @@ const MintingTier: React.FC<MintingTierProps> = ({
 
       {/* Moon Silhouette - Only for Moon tier */}
       {tierNumber === 0 && (
-        <div className="absolute top-6 right-6 opacity-60 pointer-events-none">
-          <MoonSilhouette className="w-52 h-52" style={{ color: planetColors.primary }} />
+        <div className="absolute top-0 right-4 opacity-50 pointer-events-none" style={{ height: '280px' }}>
+          <MoonSilhouette className="w-full h-full" style={{ color: planetColors.primary }} />
         </div>
       )}
     </motion.div>
