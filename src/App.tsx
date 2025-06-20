@@ -1,68 +1,69 @@
 import React, { useState, useEffect } from 'react';
-import MintingPage from './components/MintingPage';
-import { ContractData, Tier } from './types';
+import { motion } from 'framer-motion';
+import MintingTier from './components/MintingTier';
+import { ContractData } from './types';
 
 // Mock data for development - replace with actual contract calls
 const mockContractData: ContractData = {
   tiers: [
     {
-      priceInBaseToken: "0.0001", // Very cheap entry tier
+      priceInBaseToken: "0.0001", // Moon - Entry level
       priceInPaymentToken: "1",   // 1 token
       priceInAnotherPaymentToken: "0.1", // 0.1 alt token
       weight: "1"
     },
     {
-      priceInBaseToken: "0.0005", // Cheap tier
-      priceInPaymentToken: "5",   // 5 tokens
-      priceInAnotherPaymentToken: "0.5", // 0.5 alt token
+      priceInBaseToken: "0.0003", // Mercury - Smallest planet
+      priceInPaymentToken: "3",   // 3 tokens
+      priceInAnotherPaymentToken: "0.3", // 0.3 alt token
       weight: "2"
     },
     {
-      priceInBaseToken: "0.001",  // Low tier
-      priceInPaymentToken: "10",  // 10 tokens
-      priceInAnotherPaymentToken: "1",   // 1 alt token
+      priceInBaseToken: "0.0005", // Venus - Earth's twin
+      priceInPaymentToken: "5",   // 5 tokens
+      priceInAnotherPaymentToken: "0.5", // 0.5 alt token
       weight: "4"
     },
     {
-      priceInBaseToken: "0.002",  // Mid-low tier
-      priceInPaymentToken: "20",  // 20 tokens
-      priceInAnotherPaymentToken: "2",   // 2 alt tokens
+      priceInBaseToken: "0.001",  // Earth - Our home
+      priceInPaymentToken: "10",  // 10 tokens
+      priceInAnotherPaymentToken: "1",   // 1 alt token
       weight: "8"
     },
     {
-      priceInBaseToken: "0.005",  // Mid tier
-      priceInPaymentToken: "50",  // 50 tokens
-      priceInAnotherPaymentToken: "5",   // 5 alt tokens
+      priceInBaseToken: "0.002",  // Mars - Red planet
+      priceInPaymentToken: "20",  // 20 tokens
+      priceInAnotherPaymentToken: "2",   // 2 alt tokens
       weight: "16"
     },
     {
-      priceInBaseToken: "0.01",   // Mid-high tier
-      priceInPaymentToken: "100", // 100 tokens
-      priceInAnotherPaymentToken: "10",  // 10 alt tokens
+      priceInBaseToken: "0.005",  // Jupiter - Gas giant
+      priceInPaymentToken: "50",  // 50 tokens
+      priceInAnotherPaymentToken: "5",   // 5 alt tokens
       weight: "32"
     },
     {
-      priceInBaseToken: "0.02",   // High tier
-      priceInPaymentToken: "200", // 200 tokens
-      priceInAnotherPaymentToken: "20",  // 20 alt tokens
+      priceInBaseToken: "0.01",   // Saturn - Ringed planet
+      priceInPaymentToken: "100", // 100 tokens
+      priceInAnotherPaymentToken: "10",  // 10 alt tokens
       weight: "64"
     },
     {
-      priceInBaseToken: "0.05",   // Very high tier
-      priceInPaymentToken: "500", // 500 tokens
-      priceInAnotherPaymentToken: "50",  // 50 alt tokens
+      priceInBaseToken: "0.02",   // Uranus - Ice giant
+      priceInPaymentToken: "200", // 200 tokens
+      priceInAnotherPaymentToken: "20",  // 20 alt tokens
       weight: "128"
     },
     {
-      priceInBaseToken: "0.1",    // Premium tier
-      priceInPaymentToken: "1000", // 1000 tokens
-      priceInAnotherPaymentToken: "100", // 100 alt tokens
+      priceInBaseToken: "0.05",   // Neptune - Blue giant
+      priceInPaymentToken: "500", // 500 tokens
+      priceInAnotherPaymentToken: "50",  // 50 alt tokens
       weight: "256"
     },
     {
-      priceInBaseToken: "0.2",    // Legendary tier
-      priceInPaymentToken: "2000", // 2000 tokens
-      priceInAnotherPaymentToken: "200", // 200 alt tokens
+      priceInBaseToken: "0.1",    // Pluto - Dwarf planet
+      priceInPaymentToken: "1000", // 1000 tokens
+      priceInAnotherPaymentToken: "100", // 100 alt tokens
       weight: "512"
     }
   ],
@@ -72,125 +73,130 @@ const mockContractData: ContractData = {
 };
 
 function App() {
-  const [contractData, setContractData] = useState<ContractData>(mockContractData);
+  const [contractData, setContractData] = useState<ContractData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isConnected, setIsConnected] = useState(false);
-
-  // Mock function to load contract data - replace with actual Web3 calls
-  const loadContractData = async () => {
-    try {
-      // TODO: Replace with actual contract calls
-      // const contract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
-      // const tiers = await contract.methods.getTiers().call();
-      // setContractData(tiers);
-      console.log('Loading contract data...');
-    } catch (error) {
-      console.error('Error loading contract data:', error);
-    }
-  };
-
-  // Mock minting function - replace with actual contract interactions
-  const handleMint = async (tierNumber: number, paymentMethod: 'base' | 'payment' | 'another') => {
-    if (!isConnected) {
-      alert('Please connect your wallet first!');
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      console.log(`Minting tier ${tierNumber} with ${paymentMethod} payment method`);
-      
-      // TODO: Replace with actual minting logic
-      // const contract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
-      // let transaction;
-      // 
-      // switch (paymentMethod) {
-      //   case 'base':
-      //     transaction = await contract.methods.mintWithBaseToken(tierNumber).send({
-      //       from: account,
-      //       value: contractData.tiers[tierNumber].priceInBaseToken
-      //     });
-      //     break;
-      //   case 'payment':
-      //     // Approve token first
-      //     await paymentTokenContract.methods.approve(CONTRACT_ADDRESS, contractData.tiers[tierNumber].priceInPaymentToken).send({ from: account });
-      //     transaction = await contract.methods.mintWithPaymentToken(tierNumber).send({ from: account });
-      //     break;
-      //   case 'another':
-      //     // Approve token first
-      //     await anotherPaymentTokenContract.methods.approve(CONTRACT_ADDRESS, contractData.tiers[tierNumber].priceInAnotherPaymentToken).send({ from: account });
-      //     transaction = await contract.methods.mintWithAnotherPaymentToken(tierNumber).send({ from: account });
-      //     break;
-      // }
-      
-      // Simulate transaction delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      alert(`Successfully minted Tier ${tierNumber} NFT!`);
-      
-      // Reload contract data to update any state changes
-      await loadContractData();
-      
-    } catch (error) {
-      console.error('Minting error:', error);
-      alert('Minting failed. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Mock wallet connection - replace with actual Web3 wallet connection
-  const connectWallet = async () => {
-    try {
-      // TODO: Replace with actual wallet connection logic
-      // if (typeof window.ethereum !== 'undefined') {
-      //   const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      //   setIsConnected(true);
-      //   setAccount(accounts[0]);
-      // }
-      console.log('Connecting wallet...');
-      setIsConnected(true);
-    } catch (error) {
-      console.error('Wallet connection error:', error);
-      alert('Failed to connect wallet');
-    }
-  };
+  const [mintingTier, setMintingTier] = useState<number | null>(null);
 
   useEffect(() => {
-    loadContractData();
+    // Simulate contract data loading
+    setTimeout(() => {
+      setContractData(mockContractData);
+    }, 1000);
   }, []);
 
-  return (
-    <div className="App">
-      {/* Header with wallet connection */}
-      <div className="bg-black/20 backdrop-blur-lg border-b border-white/10 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-lg"></div>
-              <span className="text-xl font-bold text-white">HODLotto</span>
-            </div>
-            
-            <button
-              onClick={connectWallet}
-              className={`px-6 py-2 rounded-lg font-semibold transition-all duration-300 ${
-                isConnected 
-                  ? 'bg-green-500/20 text-green-400 border border-green-400/30' 
-                  : 'bg-primary-500 hover:bg-primary-600 text-white'
-              }`}
-            >
-              {isConnected ? 'Connected' : 'Connect Wallet'}
-            </button>
-          </div>
+  const handleMint = async (tierNumber: number, paymentType: 'base' | 'payment' | 'another') => {
+    setIsLoading(true);
+    setMintingTier(tierNumber);
+    
+    // Simulate minting process
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    console.log(`Minting tier ${tierNumber} with ${paymentType} payment`);
+    
+    setIsLoading(false);
+    setMintingTier(null);
+  };
+
+  if (!contractData) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-black via-purple-900 to-blue-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-white text-lg">Loading Cosmic Lottery...</p>
         </div>
       </div>
+    );
+  }
 
-      {/* Main content */}
-      <MintingPage
-        contractData={contractData}
-        onMint={handleMint}
-        isLoading={isLoading}
-      />
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-black via-purple-900 to-blue-900 relative overflow-hidden">
+      {/* Animated background stars */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-10 left-10 w-1 h-1 bg-white rounded-full animate-pulse"></div>
+        <div className="absolute top-20 right-20 w-0.5 h-0.5 bg-white/70 rounded-full animate-pulse delay-1000"></div>
+        <div className="absolute top-40 left-1/4 w-0.5 h-0.5 bg-white/50 rounded-full animate-pulse delay-2000"></div>
+        <div className="absolute top-60 right-1/3 w-1 h-1 bg-white/80 rounded-full animate-pulse delay-3000"></div>
+        <div className="absolute top-80 left-1/2 w-0.5 h-0.5 bg-white/60 rounded-full animate-pulse delay-1500"></div>
+        <div className="absolute top-96 right-1/4 w-1 h-1 bg-white/40 rounded-full animate-pulse delay-2500"></div>
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4 py-8">
+        {/* Header */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-12"
+        >
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            Cosmic Lottery
+          </h1>
+          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            Mint celestial NFTs and enter the cosmic lottery. Each celestial body has its own gravitational pull in the lottery system.
+          </p>
+          
+          {/* Lottery Info */}
+          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 max-w-4xl mx-auto">
+            <h2 className="text-2xl font-bold text-white mb-4">🌌 Cosmic Lottery System</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-blue-400 mb-2">
+                  {contractData.totalCumulativeWeight}
+                </div>
+                <div className="text-gray-300">Total Gravitational Force</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-purple-400 mb-2">
+                  10
+                </div>
+                <div className="text-gray-300">Celestial Bodies</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-pink-400 mb-2">
+                  ∞
+                </div>
+                <div className="text-gray-300">Cosmic Possibilities</div>
+              </div>
+            </div>
+            <div className="mt-6 p-4 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg border border-white/10">
+              <p className="text-gray-300 text-sm">
+                <strong>How it works:</strong> Each NFT's weight represents its gravitational pull in the lottery. 
+                Higher tiers have exponentially more weight, giving you better odds in the cosmic draw. 
+                The Moon starts with weight 1, while Pluto (the rarest) has weight 512!
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Tiers Grid */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6"
+        >
+          {contractData.tiers.map((tier, index) => (
+            <MintingTier
+              key={index}
+              tierNumber={index}
+              tier={tier}
+              onMint={handleMint}
+              isLoading={isLoading && mintingTier === index}
+            />
+          ))}
+        </motion.div>
+
+        {/* Footer */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="text-center mt-16 pt-8 border-t border-white/10"
+        >
+          <p className="text-gray-400 text-sm">
+            🌟 Explore the cosmos, mint celestial NFTs, and may the gravitational forces be ever in your favor! 🌟
+          </p>
+        </motion.div>
+      </div>
     </div>
   );
 }

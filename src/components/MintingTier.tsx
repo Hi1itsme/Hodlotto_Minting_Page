@@ -2,29 +2,94 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { MintingTierProps } from '../types';
 
-// Inline SVG icons to avoid import issues
-const StarIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="currentColor" viewBox="0 0 20 20">
+// Planet SVG icons
+const MoonIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10"/>
+    <circle cx="9" cy="9" r="1" opacity="0.6"/>
+    <circle cx="15" cy="8" r="0.8" opacity="0.5"/>
+    <circle cx="7" cy="14" r="1.2" opacity="0.4"/>
+  </svg>
+);
+
+const MercuryIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10"/>
+    <circle cx="12" cy="12" r="6" fill="none" stroke="currentColor" strokeWidth="1"/>
+    <circle cx="8" cy="8" r="1" opacity="0.7"/>
+    <circle cx="16" cy="10" r="0.8" opacity="0.6"/>
+  </svg>
+);
+
+const VenusIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10"/>
+    <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.6"/>
+    <circle cx="12" cy="12" r="2"/>
+  </svg>
+);
+
+const EarthIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+  </svg>
+);
+
+const MarsIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10"/>
+    <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.6"/>
+    <circle cx="12" cy="12" r="1.5"/>
+    <circle cx="9" cy="9" r="0.8" opacity="0.7"/>
+    <circle cx="15" cy="10" r="1" opacity="0.6"/>
+  </svg>
+);
+
+const JupiterIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10"/>
+    <ellipse cx="12" cy="12" rx="10" ry="8" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.6"/>
+    <ellipse cx="12" cy="12" rx="8" ry="6" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.4"/>
+  </svg>
+);
+
+const SaturnIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8"/>
+    <ellipse cx="12" cy="12" rx="12" ry="3" fill="none" stroke="currentColor" strokeWidth="1"/>
+    <ellipse cx="12" cy="12" rx="10" ry="2" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+  </svg>
+);
+
+const UranusIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10"/>
+    <ellipse cx="12" cy="12" rx="12" ry="2" fill="none" stroke="currentColor" strokeWidth="1" transform="rotate(90 12 12)"/>
+    <ellipse cx="12" cy="12" rx="10" ry="1.5" fill="none" stroke="currentColor" strokeWidth="0.5" transform="rotate(90 12 12)"/>
+  </svg>
+);
+
+const NeptuneIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10"/>
+    <ellipse cx="12" cy="12" rx="10" ry="6" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.6"/>
+    <ellipse cx="12" cy="12" rx="8" ry="4" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.4"/>
+  </svg>
+);
+
+const PlutoIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8"/>
+    <circle cx="12" cy="12" r="6" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+    <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="0.3"/>
+    <circle cx="12" cy="12" r="1.5"/>
+  </svg>
+);
+
+const StarIcon = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} style={style} fill="currentColor" viewBox="0 0 20 20">
     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-  </svg>
-);
-
-const CurrencyDollarIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="currentColor" viewBox="0 0 20 20">
-    <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
-    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clipRule="evenodd" />
-  </svg>
-);
-
-const SparklesIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="currentColor" viewBox="0 0 20 20">
-    <path fillRule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732L14.146 12.8 12.967 17.256a1 1 0 01-1.934 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732L9.854 7.2 11.033 2.744A1 1 0 0112 2z" clipRule="evenodd" />
-  </svg>
-);
-
-const FireIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="currentColor" viewBox="0 0 20 20">
-    <path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clipRule="evenodd" />
   </svg>
 );
 
@@ -34,42 +99,60 @@ const MintingTier: React.FC<MintingTierProps> = ({
   onMint, 
   isLoading 
 }) => {
-  const getTierColor = (tier: number) => {
-    const colors = [
-      'from-gray-300 to-gray-500', // Tier 0 - Common
-      'from-green-300 to-green-500', // Tier 1 - Common
-      'from-blue-300 to-blue-500', // Tier 2 - Common
-      'from-purple-300 to-purple-500', // Tier 3 - Rare
-      'from-pink-300 to-pink-500', // Tier 4 - Rare
-      'from-yellow-300 to-yellow-500', // Tier 5 - Rare
-      'from-red-300 to-red-500', // Tier 6 - Epic
-      'from-indigo-300 to-indigo-500', // Tier 7 - Epic
-      'from-orange-300 to-orange-500', // Tier 8 - Legendary
-      'from-emerald-300 to-emerald-500', // Tier 9 - Legendary
+  const getCelestialBody = (tier: number) => {
+    const bodies = [
+      { name: 'Moon', type: 'satellite', description: 'Earth\'s natural satellite' },
+      { name: 'Mercury', type: 'planet', description: 'Smallest planet, closest to Sun' },
+      { name: 'Venus', type: 'planet', description: 'Earth\'s twin, hottest planet' },
+      { name: 'Earth', type: 'planet', description: 'Our home, the blue planet' },
+      { name: 'Mars', type: 'planet', description: 'Red planet, future home' },
+      { name: 'Jupiter', type: 'gas-giant', description: 'Largest planet, gas giant' },
+      { name: 'Saturn', type: 'ringed', description: 'Ringed planet, most beautiful' },
+      { name: 'Uranus', type: 'ice-giant', description: 'Ice giant, tilted on its side' },
+      { name: 'Neptune', type: 'ice-giant', description: 'Blue giant, windiest planet' },
+      { name: 'Pluto', type: 'dwarf', description: 'Dwarf planet, mysterious world' }
     ];
-    return colors[tier] || colors[0];
+    return bodies[tier] || bodies[0];
   };
 
   const getTierIcon = (tier: number) => {
-    if (tier <= 2) return <StarIcon className="w-6 h-6" />;
-    if (tier <= 5) return <SparklesIcon className="w-6 h-6" />;
-    if (tier <= 7) return <FireIcon className="w-6 h-6" />;
-    return <CurrencyDollarIcon className="w-6 h-6" />;
+    switch (tier) {
+      case 0: return <MoonIcon className="w-8 h-8" />;
+      case 1: return <MercuryIcon className="w-8 h-8" />;
+      case 2: return <VenusIcon className="w-8 h-8" />;
+      case 3: return <EarthIcon className="w-8 h-8" />;
+      case 4: return <MarsIcon className="w-8 h-8" />;
+      case 5: return <JupiterIcon className="w-8 h-8" />;
+      case 6: return <SaturnIcon className="w-8 h-8" />;
+      case 7: return <UranusIcon className="w-8 h-8" />;
+      case 8: return <NeptuneIcon className="w-8 h-8" />;
+      case 9: return <PlutoIcon className="w-8 h-8" />;
+      default: return <MoonIcon className="w-8 h-8" />;
+    }
   };
 
   const getTierRarity = (tier: number) => {
-    if (tier <= 2) return 'Common';
-    if (tier <= 5) return 'Rare';
-    if (tier <= 7) return 'Epic';
-    return 'Legendary';
+    if (tier === 0) return 'Satellite';
+    if (tier <= 4) return 'Terrestrial';
+    if (tier <= 6) return 'Gas Giant';
+    if (tier <= 8) return 'Ice Giant';
+    return 'Dwarf Planet';
   };
 
-  const getTierName = (tier: number) => {
-    const names = [
-      'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond',
-      'Ruby', 'Sapphire', 'Emerald', 'Obsidian', 'Mythic'
+  const getPlanetColors = (tier: number) => {
+    const colors = [
+      { primary: '#9CA3AF', secondary: '#6B7280', accent: '#374151' }, // Moon - Gray
+      { primary: '#F59E0B', secondary: '#D97706', accent: '#B45309' }, // Mercury - Orange
+      { primary: '#EAB308', secondary: '#CA8A04', accent: '#A16207' }, // Venus - Yellow
+      { primary: '#3B82F6', secondary: '#2563EB', accent: '#1D4ED8' }, // Earth - Blue
+      { primary: '#EF4444', secondary: '#DC2626', accent: '#B91C1C' }, // Mars - Red
+      { primary: '#F59E0B', secondary: '#D97706', accent: '#B45309' }, // Jupiter - Amber
+      { primary: '#FCD34D', secondary: '#F59E0B', accent: '#D97706' }, // Saturn - Gold
+      { primary: '#06B6D4', secondary: '#0891B2', accent: '#0E7490' }, // Uranus - Cyan
+      { primary: '#3B82F6', secondary: '#2563EB', accent: '#1D4ED8' }, // Neptune - Blue
+      { primary: '#A855F7', secondary: '#9333EA', accent: '#7C3AED' }, // Pluto - Purple
     ];
-    return names[tier] || `Tier ${tier}`;
+    return colors[tier] || colors[0];
   };
 
   const formatPrice = (price: string) => {
@@ -92,37 +175,63 @@ const MintingTier: React.FC<MintingTierProps> = ({
     return numWeight.toString();
   };
 
+  const celestialBody = getCelestialBody(tierNumber);
+  const planetColors = getPlanetColors(tierNumber);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: tierNumber * 0.1 }}
-      className="tier-card group"
+      className="tier-card group relative overflow-hidden"
+      style={{
+        borderColor: planetColors.primary,
+        background: `linear-gradient(135deg, 
+          ${planetColors.primary}10, 
+          ${planetColors.secondary}05)`
+      }}
     >
+      {/* Planet-themed background glow */}
+      <div className="absolute inset-0 opacity-20"
+           style={{
+             background: `radial-gradient(circle at 30% 30%, ${planetColors.primary}30, transparent 70%)`
+           }}>
+      </div>
+      
       {/* Tier Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center space-x-3">
-          <div className={`p-2 rounded-full bg-gradient-to-r ${getTierColor(tierNumber)}`}>
+      <div className="relative z-10 flex items-center justify-between mb-8">
+        <div className="flex items-center space-x-4">
+          <div className="p-4 rounded-full shadow-lg"
+               style={{
+                 background: `linear-gradient(135deg, ${planetColors.primary}, ${planetColors.secondary})`
+               }}>
             {getTierIcon(tierNumber)}
           </div>
-          <div>
-            <h3 className="text-xl font-bold text-white">{getTierName(tierNumber)}</h3>
+          <div className="flex flex-col space-y-1">
+            <h3 className="text-xl font-bold text-white">{celestialBody.name}</h3>
             <p className="text-sm text-gray-300">{getTierRarity(tierNumber)}</p>
           </div>
         </div>
-        <div className="text-right">
+        <div className="text-right flex flex-col space-y-1">
           <div className="text-2xl font-bold text-white">
             {formatWeight(tier.weight)}
           </div>
-          <div className="text-xs text-gray-400">Weight</div>
+          <div className="text-xs text-gray-400">Gravity</div>
         </div>
       </div>
 
+      {/* Planet Description */}
+      <div className="bg-white/5 rounded-lg p-4 mb-8 border border-white/10"
+           style={{ borderColor: `${planetColors.primary}30` }}>
+        <p className="text-sm text-gray-300 leading-relaxed">{celestialBody.description}</p>
+      </div>
+
       {/* Price Information */}
-      <div className="space-y-3 mb-6">
-        <div className="bg-white/5 rounded-lg p-3">
+      <div className="space-y-4 mb-8">
+        <div className="bg-white/10 backdrop-blur-lg rounded-lg p-4 border border-white/20"
+             style={{ borderColor: `${planetColors.primary}40` }}>
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-300">Base Token</span>
+            <span className="text-sm text-gray-300">Stellar Credits</span>
             <span className="font-semibold text-white">
               {formatPrice(tier.priceInBaseToken)}
             </span>
@@ -130,9 +239,10 @@ const MintingTier: React.FC<MintingTierProps> = ({
         </div>
         
         {parseFloat(tier.priceInPaymentToken) > 0 && (
-          <div className="bg-white/5 rounded-lg p-3">
+          <div className="bg-white/10 backdrop-blur-lg rounded-lg p-4 border border-white/20"
+               style={{ borderColor: `${planetColors.secondary}40` }}>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-300">Payment Token</span>
+              <span className="text-sm text-gray-300">Cosmic Tokens</span>
               <span className="font-semibold text-white">
                 {formatTokenPrice(tier.priceInPaymentToken)}
               </span>
@@ -141,9 +251,10 @@ const MintingTier: React.FC<MintingTierProps> = ({
         )}
         
         {parseFloat(tier.priceInAnotherPaymentToken) > 0 && (
-          <div className="bg-white/5 rounded-lg p-3">
+          <div className="bg-white/10 backdrop-blur-lg rounded-lg p-4 border border-white/20"
+               style={{ borderColor: `${planetColors.accent}40` }}>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-300">Alt Token</span>
+              <span className="text-sm text-gray-300">Nebula Coins</span>
               <span className="font-semibold text-white">
                 {formatTokenPrice(tier.priceInAnotherPaymentToken)}
               </span>
@@ -153,18 +264,21 @@ const MintingTier: React.FC<MintingTierProps> = ({
       </div>
 
       {/* Minting Buttons */}
-      <div className="space-y-2">
+      <div className="space-y-4">
         <button
           onClick={() => onMint(tierNumber, 'base')}
           disabled={isLoading}
-          className="mint-button w-full flex items-center justify-center space-x-2"
+          className="w-full flex items-center justify-center space-x-3 py-4 px-6 rounded-lg font-semibold text-white transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+          style={{
+            background: `linear-gradient(135deg, ${planetColors.primary}, ${planetColors.secondary})`
+          }}
         >
           {isLoading ? (
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
           ) : (
             <>
-              <CurrencyDollarIcon className="w-5 h-5" />
-              <span>{parseFloat(tier.priceInBaseToken) === 0 ? 'Mint Free' : 'Mint with ETH'}</span>
+              <StarIcon className="w-5 h-5" style={{ color: planetColors.primary }} />
+              <span>{parseFloat(tier.priceInBaseToken) === 0 ? 'Claim Free' : 'Mint with Credits'}</span>
             </>
           )}
         </button>
@@ -173,14 +287,17 @@ const MintingTier: React.FC<MintingTierProps> = ({
           <button
             onClick={() => onMint(tierNumber, 'payment')}
             disabled={isLoading}
-            className="mint-button w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
+            className="w-full flex items-center justify-center space-x-3 py-4 px-6 rounded-lg font-semibold text-white transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            style={{
+              background: `linear-gradient(135deg, ${planetColors.secondary}, ${planetColors.accent})`
+            }}
           >
             {isLoading ? (
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
             ) : (
               <>
-                <SparklesIcon className="w-5 h-5" />
-                <span>Mint with Token</span>
+                {getTierIcon(tierNumber)}
+                <span>Mint with Tokens</span>
               </>
             )}
           </button>
@@ -190,37 +307,74 @@ const MintingTier: React.FC<MintingTierProps> = ({
           <button
             onClick={() => onMint(tierNumber, 'another')}
             disabled={isLoading}
-            className="mint-button w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+            className="w-full flex items-center justify-center space-x-3 py-4 px-6 rounded-lg font-semibold text-white transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            style={{
+              background: `linear-gradient(135deg, ${planetColors.accent}, ${planetColors.primary})`
+            }}
           >
             {isLoading ? (
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
             ) : (
               <>
-                <FireIcon className="w-5 h-5" />
-                <span>Mint with Alt Token</span>
+                <MoonIcon className="w-5 h-5" />
+                <span>Mint with Coins</span>
               </>
             )}
           </button>
         )}
       </div>
 
-      {/* Lottery Info */}
-      <div className="mt-4 pt-4 border-t border-white/10">
-        <div className="text-center">
-          <p className="text-xs text-gray-400 mb-2">
-            Lottery Weight: {formatWeight(tier.weight)}
+      {/* Footer Info */}
+      <div className="mt-8 pt-6 border-t border-white/10"
+           style={{ borderColor: `${planetColors.primary}30` }}>
+        <div className="text-center space-y-3">
+          <p className="text-xs text-gray-400">
+            Orbital Weight: {formatWeight(tier.weight)}
           </p>
-          <div className="flex justify-center space-x-1">
+          <div className="flex justify-center space-x-2">
             {Array.from({ length: Math.min(Math.floor(tierNumber / 2) + 1, 5) }).map((_, i) => (
-              <StarIcon key={i} className="w-3 h-3 text-yellow-400" />
+              <StarIcon key={i} className="w-4 h-4" style={{ color: planetColors.primary }} />
             ))}
           </div>
-          <p className="text-xs text-gray-500 mt-1">
-            {tierNumber <= 2 ? 'Common Odds' : 
-             tierNumber <= 5 ? 'Rare Odds' : 
-             tierNumber <= 7 ? 'Epic Odds' : 'Legendary Odds'}
+          <p className="text-xs text-gray-500"
+             style={{ color: `${planetColors.primary}80` }}>
+            {tierNumber === 0 ? 'Lunar Odds' : 
+             tierNumber <= 4 ? 'Terrestrial Odds' : 
+             tierNumber <= 6 ? 'Gas Giant Odds' : 
+             tierNumber <= 8 ? 'Ice Giant Odds' : 'Dwarf Planet Odds'}
           </p>
         </div>
+      </div>
+
+      {/* Cosmic particles effect */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="cosmic-particle" 
+             style={{ 
+               top: '5%', 
+               right: '8%', 
+               width: '4px', 
+               height: '4px', 
+               animationDelay: '0s',
+               background: `radial-gradient(circle, ${planetColors.primary}80 0%, ${planetColors.primary}20 70%, transparent 100%)`
+             }}></div>
+        <div className="cosmic-particle" 
+             style={{ 
+               bottom: '15%', 
+               left: '12%', 
+               width: '2px', 
+               height: '2px', 
+               animationDelay: '1s',
+               background: `radial-gradient(circle, ${planetColors.secondary}80 0%, ${planetColors.secondary}20 70%, transparent 100%)`
+             }}></div>
+        <div className="cosmic-particle" 
+             style={{ 
+               top: '50%', 
+               right: '15%', 
+               width: '3px', 
+               height: '3px', 
+               animationDelay: '2s',
+               background: `radial-gradient(circle, ${planetColors.accent}80 0%, ${planetColors.accent}20 70%, transparent 100%)`
+             }}></div>
       </div>
     </motion.div>
   );
