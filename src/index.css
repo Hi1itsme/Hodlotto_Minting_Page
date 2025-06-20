@@ -21,13 +21,14 @@ code {
 
 /* Tier card styling with cosmic effects */
 .tier-card {
-  @apply bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-lg rounded-2xl p-8 border-2 shadow-2xl;
+  @apply bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-lg rounded-2xl p-6 border-2 shadow-2xl;
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
-  min-height: 600px;
+  min-height: 580px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 
 .tier-card::before {

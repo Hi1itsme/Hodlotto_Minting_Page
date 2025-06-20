@@ -93,6 +93,20 @@ const StarIcon = ({ className, style }: { className?: string; style?: React.CSSP
   </svg>
 );
 
+const MoonSilhouette = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
+  <div className={className} style={style}>
+    <img 
+      src="/moon-svg.svg" 
+      alt="Moon silhouette" 
+      className="w-full h-full object-contain"
+      style={{
+        filter: 'brightness(0.9) contrast(1.0)',
+        opacity: 0.8
+      }}
+    />
+  </div>
+);
+
 const MintingTier: React.FC<MintingTierProps> = ({ 
   tierNumber, 
   tier, 
@@ -376,6 +390,13 @@ const MintingTier: React.FC<MintingTierProps> = ({
                background: `radial-gradient(circle, ${planetColors.accent}80 0%, ${planetColors.accent}20 70%, transparent 100%)`
              }}></div>
       </div>
+
+      {/* Moon Silhouette - Only for Moon tier */}
+      {tierNumber === 0 && (
+        <div className="absolute top-6 right-6 opacity-60 pointer-events-none">
+          <MoonSilhouette className="w-52 h-52" style={{ color: planetColors.primary }} />
+        </div>
+      )}
     </motion.div>
   );
 };
