@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Tier } from '../types';
-import EarthBackground from './SpacemanBackground';
 
 interface MintingPageProps {
   tier: Tier;
@@ -21,125 +20,137 @@ interface MintingPageProps {
 }
 
 const MintingPage: React.FC<MintingPageProps> = ({ tier, contractData, lottoEntries, onMint }) => {
-  const planetIcons = [
-    '/Mercury_icon.png',
-    '/Venus_icon.png',
-    '/Earth_Icon.png',
-    '/Mars_Icon.png',
-    '/Jupiter_Icon.png',
-    '/Saturn Icon.png',
-    '/Uranus_Icon.png',
-    '/Neptune_Icon.png',
-    '/Pluto_Icon.png',
-    '/Moon_Icon.png'
-  ];
+  const getRarityColor = (weight: number) => {
+    if (weight <= 3) return 'text-green-400';
+    if (weight <= 6) return 'text-yellow-400';
+    return 'text-purple-400';
+  };
+
+  const getRarityText = (weight: number) => {
+    if (weight <= 3) return 'Common';
+    if (weight <= 6) return 'Rare';
+    return 'Legendary';
+  };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <EarthBackground className="rounded-3xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-2xl">
-        {/* NFT Card Header */}
-        <div className="p-8">
-          {/* NFT Badge and Tier Info */}
-          <div className="flex justify-between items-start mb-6">
-            <div className="flex items-center gap-4">
-              <motion.img
-                src={planetIcons[tier.id - 1] || planetIcons[0]}
-                alt={`Planet ${tier.id}`}
-                className="w-20 h-20 object-contain"
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.8 }}
+    <div className="w-full max-w-4xl mx-auto">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-6 lg:p-8 shadow-2xl"
+      >
+        {/* NFT Header */}
+        <div className="flex items-start justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 lg:w-20 lg:h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+              <img
+                src={`/${tier.name}_Icon.png`}
+                alt={tier.name}
+                className="w-10 h-10 lg:w-12 lg:h-12 object-contain"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                }}
               />
-              <div>
-                <h2 className="text-4xl font-bold text-white mb-2">{tier.name}</h2>
-                <div className="flex items-center gap-4">
-                  <div className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-white font-semibold">
-                    Tier {tier.id}
-                  </div>
-                  <div className="px-4 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full text-white font-semibold">
-                    Weight: {tier.weight}
-                  </div>
-                </div>
+            </div>
+            <div>
+              <h2 className="text-2xl lg:text-3xl font-bold text-white mb-2">{tier.name}</h2>
+              <div className="flex gap-2 mb-2">
+                <span className="px-3 py-1 bg-purple-500/20 text-purple-300 text-sm rounded-full border border-purple-500/30">
+                  Tier {tier.id}
+                </span>
+                <span className="px-3 py-1 bg-blue-500/20 text-blue-300 text-sm rounded-full border border-blue-500/30">
+                  Weight: {tier.weight}
+                </span>
               </div>
             </div>
-
-            {/* NFT Collection Badge */}
-            <div className="text-right">
-              <div className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full text-white font-semibold mb-2">
-                Cosmic Collection
-              </div>
-              <div className="text-white/70 text-sm">NFT #{tier.id.toString().padStart(3, '0')}</div>
-            </div>
           </div>
 
-          {/* NFT Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-              <h3 className="text-sm font-semibold text-white/70 mb-1">Base Price</h3>
-              <p className="text-2xl font-bold text-purple-400">{tier.basePrice} ETH</p>
+          <div className="text-right">
+            <div className="px-3 py-1 bg-green-500/20 text-green-300 text-sm rounded-full border border-green-500/30 mb-2">
+              Cosmic Collection
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-              <h3 className="text-sm font-semibold text-white/70 mb-1">Payment Price</h3>
-              <p className="text-2xl font-bold text-pink-400">{tier.paymentPrice} ETH</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-              <h3 className="text-sm font-semibold text-white/70 mb-1">Another Price</h3>
-              <p className="text-2xl font-bold text-blue-400">{tier.anotherPrice} ETH</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-              <h3 className="text-sm font-semibold text-white/70 mb-1">Rarity</h3>
-              <p className="text-2xl font-bold text-green-400">{tier.weight > 5 ? 'Legendary' : tier.weight > 3 ? 'Rare' : 'Common'}</p>
-            </div>
-          </div>
-
-          {/* NFT Description */}
-          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 mb-8">
-            <h3 className="text-lg font-semibold text-white mb-3">NFT Description</h3>
-            <p className="text-white/80 leading-relaxed">
-              The {tier.name} NFT represents one of the most prestigious celestial bodies in our cosmic collection.
-              This unique digital asset grants you exclusive access to our lottery system with enhanced weight
-              for better odds. Each NFT is soulbound and cannot be transferred, ensuring the integrity of our
-              cosmic lottery ecosystem.
-            </p>
-          </div>
-
-          {/* Minting Buttons */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <motion.button
-              onClick={onMint}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-4 bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl text-white font-semibold hover:from-purple-700 hover:to-purple-800 transition-all duration-300 shadow-lg hover:shadow-purple-500/25 flex items-center justify-center gap-2"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              Mint with Base
-            </motion.button>
-            <motion.button
-              onClick={onMint}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-4 bg-gradient-to-r from-pink-600 to-pink-700 rounded-xl text-white font-semibold hover:from-pink-700 hover:to-pink-800 transition-all duration-300 shadow-lg hover:shadow-pink-500/25 flex items-center justify-center gap-2"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-              </svg>
-              Mint with Payment
-            </motion.button>
-            <motion.button
-              onClick={onMint}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-4 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl text-white font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-blue-500/25 flex items-center justify-center gap-2"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-              </svg>
-              Mint with Another
-            </motion.button>
+            <div className="text-white/70 text-sm">NFT #{String(tier.id).padStart(3, '0')}</div>
           </div>
         </div>
-      </EarthBackground>
+
+        {/* Price Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6">
+          <div className="bg-white/10 rounded-lg p-3 lg:p-4 border border-white/20">
+            <p className="text-white/70 text-xs mb-1">Base Price</p>
+            <p className="text-purple-400 font-bold text-lg">{tier.basePrice} ETH</p>
+          </div>
+          <div className="bg-white/10 rounded-lg p-3 lg:p-4 border border-white/20">
+            <p className="text-white/70 text-xs mb-1">Payment Price</p>
+            <p className="text-pink-400 font-bold text-lg">{tier.paymentPrice} ETH</p>
+          </div>
+          <div className="bg-white/10 rounded-lg p-3 lg:p-4 border border-white/20">
+            <p className="text-white/70 text-xs mb-1">Another Price</p>
+            <p className="text-blue-400 font-bold text-lg">{tier.anotherPrice} ETH</p>
+          </div>
+          <div className="bg-white/10 rounded-lg p-3 lg:p-4 border border-white/20">
+            <p className="text-white/70 text-xs mb-1">Rarity</p>
+            <p className={`font-bold text-lg ${getRarityColor(tier.weight)}`}>{getRarityText(tier.weight)}</p>
+          </div>
+        </div>
+
+        {/* NFT Description */}
+        <div className="mb-6">
+          <h3 className="text-white font-semibold mb-3">NFT Description</h3>
+          <p className="text-white/80 text-sm leading-relaxed">
+            The {tier.name} NFT represents a unique celestial body in our cosmic lottery ecosystem.
+            Each {tier.name} NFT carries special weight and rarity characteristics that influence
+            the lottery outcomes. Collectors can mint these NFTs using different payment methods,
+            each offering unique advantages and potential rewards within the cosmic collection.
+          </p>
+        </div>
+
+        {/* Minting Buttons */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-4">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-300 shadow-lg"
+            onClick={onMint}
+          >
+            + Mint with Base
+          </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="px-6 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white font-semibold rounded-lg hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg"
+            onClick={onMint}
+          >
+            Mint with Payment
+          </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg"
+            onClick={onMint}
+          >
+            Mint with Another
+          </motion.button>
+        </div>
+
+        {/* Recent Entries */}
+        {lottoEntries.length > 0 && (
+          <div className="mt-6 pt-6 border-t border-white/20">
+            <h3 className="text-white font-semibold mb-3">Recent Entries</h3>
+            <div className="space-y-2">
+              {lottoEntries.slice(0, 3).map((entry) => (
+                <div key={entry.id} className="flex items-center justify-between text-sm">
+                  <span className="text-white/70">{entry.address}</span>
+                  <span className="text-white">{entry.amount} entries</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </motion.div>
     </div>
   );
 };
