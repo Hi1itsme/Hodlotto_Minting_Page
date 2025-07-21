@@ -1,20 +1,24 @@
 export interface Tier {
-  priceInBaseToken: string;
-  priceInPaymentToken: string;
-  priceInAnotherPaymentToken: string;
-  weight: string;
+  id: number;
+  name: string;
+  weight: number;
+  basePrice: number;
+  paymentPrice: number;
+  anotherPrice: number;
 }
 
 export interface LottoEntry {
-  lottoID: string;
-  weight: string;
+  id: number;
+  address: string;
+  amount: number;
+  timestamp: number;
 }
 
 export interface ContractData {
-  tiers: Tier[];
-  paymentToken: string;
-  anotherPaymentToken: string;
-  totalCumulativeWeight: string;
+  totalSupply: number;
+  maxSupply: number;
+  mintPrice: number;
+  isPaused: boolean;
 }
 
 export interface MintingTierProps {
@@ -25,7 +29,8 @@ export interface MintingTierProps {
 }
 
 export interface MintingPageProps {
+  tier: Tier;
   contractData: ContractData;
-  onMint: (tierNumber: number, paymentMethod: 'base' | 'payment' | 'another') => void;
-  isLoading: boolean;
+  lottoEntries: LottoEntry[];
+  onMint: () => void;
 } 

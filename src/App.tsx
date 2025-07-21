@@ -1,203 +1,311 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import MintingTier from './components/MintingTier';
-import { ContractData } from './types';
-
-// Mock data for development - replace with actual contract calls
-const mockContractData: ContractData = {
-  tiers: [
-    {
-      priceInBaseToken: "0.0001", // Moon - Entry level
-      priceInPaymentToken: "1",   // 1 token
-      priceInAnotherPaymentToken: "0.1", // 0.1 alt token
-      weight: "1"
-    },
-    {
-      priceInBaseToken: "0.0003", // Mercury - Smallest planet
-      priceInPaymentToken: "3",   // 3 tokens
-      priceInAnotherPaymentToken: "0.3", // 0.3 alt token
-      weight: "2"
-    },
-    {
-      priceInBaseToken: "0.0005", // Venus - Earth's twin
-      priceInPaymentToken: "5",   // 5 tokens
-      priceInAnotherPaymentToken: "0.5", // 0.5 alt token
-      weight: "4"
-    },
-    {
-      priceInBaseToken: "0.001",  // Earth - Our home
-      priceInPaymentToken: "10",  // 10 tokens
-      priceInAnotherPaymentToken: "1",   // 1 alt token
-      weight: "8"
-    },
-    {
-      priceInBaseToken: "0.002",  // Mars - Red planet
-      priceInPaymentToken: "20",  // 20 tokens
-      priceInAnotherPaymentToken: "2",   // 2 alt tokens
-      weight: "16"
-    },
-    {
-      priceInBaseToken: "0.005",  // Jupiter - Gas giant
-      priceInPaymentToken: "50",  // 50 tokens
-      priceInAnotherPaymentToken: "5",   // 5 alt tokens
-      weight: "32"
-    },
-    {
-      priceInBaseToken: "0.01",   // Saturn - Ringed planet
-      priceInPaymentToken: "100", // 100 tokens
-      priceInAnotherPaymentToken: "10",  // 10 alt tokens
-      weight: "64"
-    },
-    {
-      priceInBaseToken: "0.02",   // Uranus - Ice giant
-      priceInPaymentToken: "200", // 200 tokens
-      priceInAnotherPaymentToken: "20",  // 20 alt tokens
-      weight: "128"
-    },
-    {
-      priceInBaseToken: "0.05",   // Neptune - Blue giant
-      priceInPaymentToken: "500", // 500 tokens
-      priceInAnotherPaymentToken: "50",  // 50 alt tokens
-      weight: "256"
-    },
-    {
-      priceInBaseToken: "0.1",    // Pluto - Dwarf planet
-      priceInPaymentToken: "1000", // 1000 tokens
-      priceInAnotherPaymentToken: "100", // 100 alt tokens
-      weight: "512"
-    }
-  ],
-  paymentToken: "0x1234567890123456789012345678901234567890",
-  anotherPaymentToken: "0x0987654321098765432109876543210987654321",
-  totalCumulativeWeight: "1023"
-};
+import React, { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import MintingPage from './components/MintingPage';
+import NFTShowcase from './components/NFTShowcase';
+import EarthBackground from './components/SpacemanBackground';
+import { HoleBackground } from './components/animate-ui/backgrounds/hole';
+import { Tier } from './types';
 
 function App() {
-  const [contractData, setContractData] = useState<ContractData | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [mintingTier, setMintingTier] = useState<number | null>(null);
+  const [isShowcase, setIsShowcase] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedNFT, setSelectedNFT] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    // Simulate contract data loading
-    setTimeout(() => {
-      setContractData(mockContractData);
-    }, 1000);
-  }, []);
+  // Mock data for NFT tiers
+  const tiers: Tier[] = [
+    { id: 1, name: "Mercury", weight: 1, basePrice: 0.01, paymentPrice: 0.015, anotherPrice: 0.02 },
+    { id: 2, name: "Venus", weight: 2, basePrice: 0.02, paymentPrice: 0.03, anotherPrice: 0.04 },
+    { id: 3, name: "Earth", weight: 3, basePrice: 0.03, paymentPrice: 0.045, anotherPrice: 0.06 },
+    { id: 4, name: "Mars", weight: 4, basePrice: 0.04, paymentPrice: 0.06, anotherPrice: 0.08 },
+    { id: 5, name: "Jupiter", weight: 5, basePrice: 0.05, paymentPrice: 0.075, anotherPrice: 0.1 },
+    { id: 6, name: "Saturn", weight: 6, basePrice: 0.06, paymentPrice: 0.09, anotherPrice: 0.12 },
+    { id: 7, name: "Uranus", weight: 7, basePrice: 0.07, paymentPrice: 0.105, anotherPrice: 0.14 },
+    { id: 8, name: "Neptune", weight: 8, basePrice: 0.08, paymentPrice: 0.12, anotherPrice: 0.16 },
+    { id: 9, name: "Pluto", weight: 9, basePrice: 0.09, paymentPrice: 0.135, anotherPrice: 0.18 },
+    { id: 10, name: "Moon", weight: 10, basePrice: 0.1, paymentPrice: 0.15, anotherPrice: 0.2 }
+  ];
 
-  const handleMint = async (tierNumber: number, paymentType: 'base' | 'payment' | 'another') => {
-    setIsLoading(true);
-    setMintingTier(tierNumber);
-    
-    // Simulate minting process
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    console.log(`Minting tier ${tierNumber} with ${paymentType} payment`);
-    
-    setIsLoading(false);
-    setMintingTier(null);
+  // Mock contract data
+  const contractData = {
+    totalSupply: 1000,
+    maxSupply: 10000,
+    mintPrice: 0.01,
+    isPaused: false
   };
 
-  if (!contractData) {
+  // Mock lotto entries
+  const lottoEntries = [
+    { id: 1, address: "0x1234...5678", amount: 5, timestamp: Date.now() },
+    { id: 2, address: "0x8765...4321", amount: 3, timestamp: Date.now() - 3600000 },
+    { id: 3, address: "0xabcd...efgh", amount: 7, timestamp: Date.now() - 7200000 }
+  ];
+
+  useEffect(() => {
+    // Simulate loading
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const nextSlide = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % tiers.length);
+  }, [tiers.length]);
+
+  const prevSlide = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + tiers.length) % tiers.length);
+  }, [tiers.length]);
+
+  const goToSlide = useCallback((index: number) => {
+    setCurrentIndex(index);
+  }, []);
+
+  const handleEnterMinting = () => {
+    setIsShowcase(false);
+  };
+
+  const handleBackToShowcase = () => {
+    setIsShowcase(true);
+  };
+
+  const handleSelectNFT = (tierId: number) => {
+    setSelectedNFT(tierId);
+    setCurrentIndex(tierId - 1); // Set carousel to the selected NFT
+  };
+
+  useEffect(() => {
+    // Keyboard navigation
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft') {
+        prevSlide();
+      } else if (event.key === 'ArrowRight') {
+        nextSlide();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentIndex, prevSlide, nextSlide]);
+
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-black via-purple-900 to-blue-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-white text-lg">Loading Cosmic Lottery...</p>
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="text-center"
+        >
+          <div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
+          <h2 className="text-2xl font-bold text-white">Loading Cosmic Experience...</h2>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-purple-900 to-blue-900 relative overflow-hidden">
-      {/* Animated background stars */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-10 left-10 w-1 h-1 bg-white rounded-full animate-pulse"></div>
-        <div className="absolute top-20 right-20 w-0.5 h-0.5 bg-white/70 rounded-full animate-pulse delay-1000"></div>
-        <div className="absolute top-40 left-1/4 w-0.5 h-0.5 bg-white/50 rounded-full animate-pulse delay-2000"></div>
-        <div className="absolute top-60 right-1/3 w-1 h-1 bg-white/80 rounded-full animate-pulse delay-3000"></div>
-        <div className="absolute top-80 left-1/2 w-0.5 h-0.5 bg-white/60 rounded-full animate-pulse delay-1500"></div>
-        <div className="absolute top-96 right-1/4 w-1 h-1 bg-white/40 rounded-full animate-pulse delay-2500"></div>
-      </div>
-
-      <div className="relative z-10 container mx-auto px-4 py-8">
-        {/* Header */}
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-            Cosmic Lottery
-          </h1>
-          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Mint celestial NFTs and enter the cosmic lottery. Each celestial body has its own gravitational pull in the lottery system.
-          </p>
-          
-          {/* Lottery Info */}
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold text-white mb-4">🌌 Cosmic Lottery System</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-400 mb-2">
-                  {contractData.totalCumulativeWeight}
-                </div>
-                <div className="text-gray-300">Total Gravitational Force</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-purple-400 mb-2">
-                  10
-                </div>
-                <div className="text-gray-300">Celestial Bodies</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-pink-400 mb-2">
-                  ∞
-                </div>
-                <div className="text-gray-300">Cosmic Possibilities</div>
-              </div>
-            </div>
-            <div className="mt-6 p-4 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg border border-white/10">
-              <p className="text-gray-300 text-sm">
-                <strong>How it works:</strong> Each NFT's weight represents its gravitational pull in the lottery. 
-                Higher tiers have exponentially more weight, giving you better odds in the cosmic draw. 
-                The Moon starts with weight 1, while Pluto (the rarest) has weight 512!
-              </p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Tiers Grid */}
-        <motion.div 
+    <AnimatePresence mode="wait">
+      {isShowcase ? (
+        <motion.div
+          key="showcase"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6"
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          {contractData.tiers.map((tier, index) => (
-            <MintingTier
-              key={index}
-              tierNumber={index}
-              tier={tier}
-              onMint={handleMint}
-              isLoading={isLoading && mintingTier === index}
-            />
-          ))}
+          <NFTShowcase tiers={tiers} onEnterMinting={handleEnterMinting} onSelectNFT={handleSelectNFT} />
         </motion.div>
-
-        {/* Footer */}
-        <motion.div 
+      ) : (
+        <motion.div
+          key="minting"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          className="text-center mt-16 pt-8 border-t border-white/10"
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          <p className="text-gray-400 text-sm">
-            🌟 Explore the cosmos, mint celestial NFTs, and may the gravitational forces be ever in your favor! 🌟
-          </p>
+          <HoleBackground
+            strokeColor="#ffffff"
+            numberOfLines={60}
+            numberOfDiscs={60}
+            particleRGBColor={[255, 255, 255]}
+            className="min-h-screen"
+          >
+            <div className="relative z-10 container mx-auto px-4 py-8">
+              {/* Back to Showcase Button */}
+              <motion.button
+                onClick={handleBackToShowcase}
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+                className="mb-6 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-lg text-white hover:bg-white/20 transition-all duration-300 flex items-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                Back to Showcase
+              </motion.button>
+
+              {/* Main Content Card */}
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+              >
+                <EarthBackground className="rounded-3xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-2xl">
+                  {/* Animated background glow */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-blue-500/20 animate-pulse" />
+
+                  {/* Floating particles inside card */}
+                  <div className="absolute inset-0 rounded-3xl overflow-hidden">
+                    {[...Array(20)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className="absolute w-1 h-1 bg-white/40 rounded-full"
+                        style={{
+                          left: `${Math.random() * 100}%`,
+                          top: `${Math.random() * 100}%`,
+                        }}
+                        animate={{
+                          y: [0, -30, 0],
+                          opacity: [0.4, 1, 0.4],
+                        }}
+                        transition={{
+                          duration: 4 + Math.random() * 3,
+                          repeat: Infinity,
+                          delay: Math.random() * 2,
+                        }}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Animated border glow */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500/50 via-pink-500/50 to-blue-500/50 animate-pulse opacity-30" />
+
+                  {/* Glass reflection effect */}
+                  <div
+                    className="absolute inset-0 rounded-3xl"
+                    style={{
+                      background: 'linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%)',
+                      transform: 'rotate(45deg)',
+                    }}
+                  />
+
+                  {/* Content with proper z-index */}
+                  <div className="relative z-10 p-8">
+                    {/* Header Section */}
+                    <motion.div
+                      initial={{ opacity: 0, y: -30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, delay: 0.2 }}
+                      className="text-center mb-8"
+                    >
+                      <h1 className="text-5xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent mb-4">
+                        Cosmic Lottery System
+                      </h1>
+                      <div className="w-32 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full animate-pulse" />
+                    </motion.div>
+
+                    {/* Stats Cards */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, delay: 0.4 }}
+                      className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+                    >
+                      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                        <h3 className="text-lg font-semibold text-white mb-2">Total Supply</h3>
+                        <p className="text-3xl font-bold text-purple-400">{contractData.totalSupply.toLocaleString()}</p>
+                      </div>
+                      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                        <h3 className="text-lg font-semibold text-white mb-2">Max Supply</h3>
+                        <p className="text-3xl font-bold text-pink-400">{contractData.maxSupply.toLocaleString()}</p>
+                      </div>
+                      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                        <h3 className="text-lg font-semibold text-white mb-2">Mint Price</h3>
+                        <p className="text-3xl font-bold text-blue-400">{contractData.mintPrice} ETH</p>
+                      </div>
+                    </motion.div>
+
+                    {/* Horizontal Carousel */}
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.8, delay: 0.6 }}
+                      className="relative"
+                    >
+                      {/* Navigation Arrows */}
+                      <button
+                        onClick={prevSlide}
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300"
+                      >
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={nextSlide}
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300"
+                      >
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+
+                      {/* Carousel Container */}
+                      <div className="overflow-hidden">
+                        <div
+                          className="flex transition-transform duration-500 ease-in-out"
+                          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+                        >
+                          {tiers.map((tier) => (
+                            <div key={tier.id} className="w-full flex-shrink-0 px-4">
+                              <MintingPage
+                                tier={tier}
+                                contractData={contractData}
+                                lottoEntries={lottoEntries}
+                                onMint={() => console.log('Minting...')}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Dot Indicators */}
+                      <div className="flex justify-center mt-6 space-x-2">
+                        {tiers.map((_, index) => (
+                          <button
+                            key={index}
+                            onClick={() => goToSlide(index)}
+                            className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentIndex
+                              ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                              : 'bg-white/30 hover:bg-white/50'
+                              }`}
+                          />
+                        ))}
+                      </div>
+                    </motion.div>
+
+                    {/* Footer */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, delay: 0.8 }}
+                      className="text-center mt-8 pt-8 border-t border-white/20"
+                    >
+                      <p className="text-white/70">
+                        Experience the magic of cosmic NFT minting
+                      </p>
+                    </motion.div>
+                  </div>
+                </EarthBackground>
+              </motion.div>
+            </div>
+          </HoleBackground>
         </motion.div>
-      </div>
-    </div>
+      )}
+    </AnimatePresence>
   );
 }
 
