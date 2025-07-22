@@ -150,7 +150,7 @@ const MintingTier: React.FC<MintingTierProps> = ({ tierNumber, tier, onMint, isL
               }}
             />
           ))}
-        </div>
+      </div>
 
         {/* Glass reflection */}
         <div
@@ -164,16 +164,16 @@ const MintingTier: React.FC<MintingTierProps> = ({ tierNumber, tier, onMint, isL
         {/* Content */}
         <div className="relative z-10">
           {/* Header with Planet Icon */}
-          <motion.div
+      <motion.div
             className="text-center mb-6"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
-          >
-            <motion.div
+      >
+        <motion.div
               className="relative mb-4"
               whileHover={{ scale: 1.1, rotate: 5 }}
-              transition={{ duration: 0.3 }}
+          transition={{ duration: 0.3 }}
             >
               <div className="relative">
                 <motion.div
@@ -193,8 +193,8 @@ const MintingTier: React.FC<MintingTierProps> = ({ tierNumber, tier, onMint, isL
                   alt={planetNames[tierNumber]}
                   className="w-24 h-24 mx-auto rounded-full object-cover border-2 border-white/30 shadow-lg"
                 />
-              </div>
-            </motion.div>
+          </div>
+        </motion.div>
 
             <motion.h3
               className="text-2xl font-bold text-white mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent"
@@ -233,7 +233,7 @@ const MintingTier: React.FC<MintingTierProps> = ({ tierNumber, tier, onMint, isL
               className="bg-gradient-to-br from-indigo-500/10 to-indigo-600/10 backdrop-blur-lg rounded-xl p-4 border border-indigo-500/20"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.2 }}
-            >
+          >
               <div className="text-sm text-gray-300 mb-1">Price (Base)</div>
               <div className="text-xl font-bold text-indigo-400">{tier.basePrice} ETH</div>
             </motion.div>
@@ -265,14 +265,14 @@ const MintingTier: React.FC<MintingTierProps> = ({ tierNumber, tier, onMint, isL
             className="space-y-3"
           >
             {/* Base Token Button */}
-            <motion.button
-              onClick={() => onMint(tierNumber, 'base')}
-              disabled={isLoading}
+        <motion.button
+          onClick={() => onMint(tierNumber, 'base')}
+          disabled={isLoading}
               whileHover={{
                 scale: 1.05,
                 boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.3)"
               }}
-              whileTap={{ scale: 0.95 }}
+          whileTap={{ scale: 0.95 }}
               className={`w-full py-3 px-6 rounded-2xl font-bold text-lg transition-all duration-300 relative overflow-hidden ${isLoading
                 ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
                 : `bg-gradient-to-r ${getTierColor(tierNumber)} text-white hover:shadow-lg ${getTierGlow(tierNumber)}`
@@ -293,35 +293,35 @@ const MintingTier: React.FC<MintingTierProps> = ({ tierNumber, tier, onMint, isL
 
               {/* Button content */}
               <span className="relative z-10 flex items-center justify-center">
-                {isLoading ? (
+          {isLoading ? (
                   <>
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                       className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full mr-2"
-                    />
+            />
                     Minting...
                   </>
-                ) : (
+          ) : (
                   `Mint with Base Token`
-                )}
+          )}
               </span>
-            </motion.button>
+        </motion.button>
 
             {/* Payment Token Button */}
-            <motion.button
-              onClick={() => onMint(tierNumber, 'payment')}
-              disabled={isLoading}
+          <motion.button
+            onClick={() => onMint(tierNumber, 'payment')}
+            disabled={isLoading}
               whileHover={{
                 scale: 1.05,
                 boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.3)"
               }}
-              whileTap={{ scale: 0.95 }}
+            whileTap={{ scale: 0.95 }}
               className={`w-full py-3 px-6 rounded-2xl font-bold text-lg transition-all duration-300 relative overflow-hidden ${isLoading
                 ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
                 : `bg-gradient-to-r ${getTierColor(tierNumber)} text-white hover:shadow-lg ${getTierGlow(tierNumber)}`
                 }`}
-            >
+          >
               {/* Button background animation */}
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"
@@ -341,31 +341,31 @@ const MintingTier: React.FC<MintingTierProps> = ({ tierNumber, tier, onMint, isL
                   <>
                     <motion.div
                       animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                       className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full mr-2"
-                    />
+              />
                     Minting...
                   </>
                 ) : (
                   `Mint with Payment Token`
                 )}
               </span>
-            </motion.button>
+          </motion.button>
 
             {/* Another Payment Token Button */}
-            <motion.button
-              onClick={() => onMint(tierNumber, 'another')}
-              disabled={isLoading}
+          <motion.button
+            onClick={() => onMint(tierNumber, 'another')}
+            disabled={isLoading}
               whileHover={{
                 scale: 1.05,
                 boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.3)"
               }}
-              whileTap={{ scale: 0.95 }}
+            whileTap={{ scale: 0.95 }}
               className={`w-full py-3 px-6 rounded-2xl font-bold text-lg transition-all duration-300 relative overflow-hidden ${isLoading
                 ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
                 : `bg-gradient-to-r ${getTierColor(tierNumber)} text-white hover:shadow-lg ${getTierGlow(tierNumber)}`
                 }`}
-            >
+          >
               {/* Button background animation */}
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"
@@ -385,16 +385,16 @@ const MintingTier: React.FC<MintingTierProps> = ({ tierNumber, tier, onMint, isL
                   <>
                     <motion.div
                       animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                       className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full mr-2"
-                    />
+              />
                     Minting...
                   </>
                 ) : (
                   `Mint with Another Token`
                 )}
               </span>
-            </motion.button>
+          </motion.button>
           </motion.div>
 
           {/* Tier Badge */}

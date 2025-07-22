@@ -3,6 +3,9 @@ import { motion } from 'framer-motion';
 import MintingPage from './components/MintingPage';
 import EarthBackground from './components/SpacemanBackground';
 import { HoleBackground } from './components/animate-ui/backgrounds/hole';
+import BasicThreeScene from './components/BasicThreeScene';
+import EarthParticleSystem from './components/EarthParticleSystem';
+import ThreeDEarth from './components/ThreeDEarth';
 import { Tier } from './types';
 
 function App() {
@@ -11,18 +14,18 @@ function App() {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [selectedNFT, setSelectedNFT] = useState(0);
 
-  // Mock data for NFT tiers (now includes Moon)
+  // Updated NFT tiers with lottery system data
   const tiers: Tier[] = [
-    { id: 1, name: "Mercury", weight: 1, basePrice: 0.01, paymentPrice: 0.015, anotherPrice: 0.02 },
-    { id: 2, name: "Venus", weight: 2, basePrice: 0.02, paymentPrice: 0.03, anotherPrice: 0.04 },
-    { id: 3, name: "Earth", weight: 3, basePrice: 0.03, paymentPrice: 0.045, anotherPrice: 0.06 },
-    { id: 4, name: "Mars", weight: 4, basePrice: 0.04, paymentPrice: 0.06, anotherPrice: 0.08 },
-    { id: 5, name: "Jupiter", weight: 5, basePrice: 0.05, paymentPrice: 0.075, anotherPrice: 0.1 },
-    { id: 6, name: "Saturn", weight: 6, basePrice: 0.06, paymentPrice: 0.09, anotherPrice: 0.12 },
-    { id: 7, name: "Uranus", weight: 7, basePrice: 0.07, paymentPrice: 0.105, anotherPrice: 0.14 },
-    { id: 8, name: "Neptune", weight: 8, basePrice: 0.08, paymentPrice: 0.12, anotherPrice: 0.16 },
-    { id: 9, name: "Pluto", weight: 9, basePrice: 0.09, paymentPrice: 0.135, anotherPrice: 0.18 },
-    { id: 10, name: "Moon", weight: 10, basePrice: 0.1, paymentPrice: 0.15, anotherPrice: 0.2 }
+    { id: 0, name: "Tier 0", weight: 1, basePrice: 0.01, paymentPrice: 0.015, anotherPrice: 0.02 },
+    { id: 1, name: "Tier 1", weight: 2, basePrice: 0.02, paymentPrice: 0.03, anotherPrice: 0.04 },
+    { id: 2, name: "Tier 2", weight: 4, basePrice: 0.04, paymentPrice: 0.06, anotherPrice: 0.08 },
+    { id: 3, name: "Tier 3", weight: 8, basePrice: 0.08, paymentPrice: 0.12, anotherPrice: 0.16 },
+    { id: 4, name: "Tier 4", weight: 16, basePrice: 0.16, paymentPrice: 0.24, anotherPrice: 0.32 },
+    { id: 5, name: "Tier 5", weight: 32, basePrice: 0.32, paymentPrice: 0.48, anotherPrice: 0.64 },
+    { id: 6, name: "Tier 6", weight: 64, basePrice: 0.64, paymentPrice: 0.96, anotherPrice: 1.28 },
+    { id: 7, name: "Tier 7", weight: 128, basePrice: 1.28, paymentPrice: 1.92, anotherPrice: 2.56 },
+    { id: 8, name: "Tier 8", weight: 256, basePrice: 2.56, paymentPrice: 3.84, anotherPrice: 5.12 },
+    { id: 9, name: "Tier 9", weight: 512, basePrice: 5.12, paymentPrice: 7.68, anotherPrice: 10.24 }
   ];
 
   // Mock contract data
@@ -30,7 +33,9 @@ function App() {
     totalSupply: 1000,
     maxSupply: 10000,
     mintPrice: 0.1,
-    isPaused: false
+    isPaused: false,
+    totalCumulativeWeight: 1023, // Sum of all tier weights
+    lotteryEntries: 1500
   };
 
   // Mock lottery entries
@@ -80,7 +85,7 @@ function App() {
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-white text-lg">Loading Cosmic NFT Collection...</p>
+          <p className="text-white text-lg">Loading NFT Lottery System...</p>
         </div>
       </div>
     );
@@ -96,7 +101,7 @@ function App() {
             {/* Logo */}
             <div className="mb-6">
               <h1 className="text-lg font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Cosmic NFT
+                NFT Lottery
               </h1>
             </div>
 
@@ -108,8 +113,8 @@ function App() {
                   <button
                     onClick={() => setActiveSection('dashboard')}
                     className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${activeSection === 'dashboard'
-                        ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white'
-                        : 'text-white/70 hover:text-white hover:bg-white/10'
+                      ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white'
+                      : 'text-white/70 hover:text-white hover:bg-white/10'
                       }`}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,14 +125,38 @@ function App() {
                   <button
                     onClick={() => setActiveSection('market')}
                     className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${activeSection === 'market'
-                        ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white'
-                        : 'text-white/70 hover:text-white hover:bg-white/10'
+                      ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white'
+                      : 'text-white/70 hover:text-white hover:bg-white/10'
                       }`}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                     </svg>
                     Market
+                  </button>
+                  <button
+                    onClick={() => setActiveSection('demo')}
+                    className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${activeSection === 'demo'
+                      ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white'
+                      : 'text-white/70 hover:text-white hover:bg-white/10'
+                      }`}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    Three.js Demo
+                  </button>
+                  <button
+                    onClick={() => setActiveSection('earth')}
+                    className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${activeSection === 'earth'
+                      ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white'
+                      : 'text-white/70 hover:text-white hover:bg-white/10'
+                      }`}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Earth Particles
                   </button>
                 </div>
               </div>
@@ -180,127 +209,239 @@ function App() {
             <div className="flex items-center gap-3">
               <div className="w-5 h-5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
               <div className="text-right hidden sm:block">
-                <p className="text-white font-medium text-sm">Jem Patel</p>
+                <p className="text-white font-medium text-sm">Nikhil Prakash</p>
               </div>
             </div>
           </div>
 
           {/* Main Content */}
           <div className="flex-1 flex min-h-0">
-            {/* NFT Gallery */}
-            <div className="flex-1 p-4 overflow-y-auto">
-              <HoleBackground strokeColor="#ffffff" numberOfLines={60} numberOfDiscs={60} particleRGBColor={[255, 255, 255]} className="h-full">
-                <div className="relative z-10 h-full">
-                  {/* Header */}
-                  <div className="mb-6">
-                    <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
-                      Cosmic NFT Collection
-                    </h1>
-                    <p className="text-white/70 text-base">Discover celestial NFTs</p>
-                  </div>
+            {activeSection === 'demo' ? (
+              <>
+                {/* Three.js Demo Section */}
+                <div className="flex-1 p-4 overflow-y-auto">
+                  <div className="h-full">
+                    {/* Header */}
+                    <div className="mb-6">
+                      <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
+                        Three.js Demo Scene
+                      </h1>
+                      <p className="text-white/70 text-base">Basic Three.js scene with camera, renderer, orbit controls, and lighting</p>
+                    </div>
 
-                  {/* NFT Grid */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                    {tiers.map((tier, index) => (
-                      <motion.div
-                        key={tier.id}
-                        onClick={() => setSelectedNFT(index)}
-                        className={`bg-gray-800 rounded-xl p-4 border border-gray-600 cursor-pointer transition-all duration-200 hover:bg-gray-700 hover:scale-105 ${selectedNFT === index ? 'ring-2 ring-purple-500 bg-gray-700' : ''
-                          }`}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        {/* NFT Image Placeholder */}
-                        <div className="w-full h-24 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg mb-3 flex items-center justify-center">
-                          <div className="text-center">
-                            <div className={`w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto mb-2`}></div>
-                            <p className="text-white font-semibold text-sm">{tier.name}</p>
-                          </div>
-                        </div>
+                    {/* Three.js Scene */}
+                    <div className="bg-gray-900 rounded-xl border border-gray-600 overflow-hidden">
+                      <BasicThreeScene className="w-full h-96" />
+                    </div>
 
-                        {/* NFT Info */}
-                        <div className="space-y-2">
-                          <div className="flex justify-between text-sm">
-                            <span className="text-white/70">Price</span>
-                            <span className="text-white font-semibold">{tier.basePrice} ETH</span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-white/70">Weight</span>
-                            <span className="text-white">{tier.weight}</span>
-                          </div>
-                          <button className="w-full mt-3 px-3 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg text-white text-sm font-semibold hover:from-purple-400 hover:to-pink-400 transition-all duration-300">
-                            Mint
-                          </button>
-                        </div>
-                      </motion.div>
-                    ))}
+                    {/* Scene Info */}
+                    <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="bg-gray-800 rounded-lg p-4 border border-gray-600">
+                        <h3 className="text-white font-semibold mb-2">Camera</h3>
+                        <p className="text-white/70 text-sm">Perspective camera with orbit controls for interactive viewing</p>
+                      </div>
+                      <div className="bg-gray-800 rounded-lg p-4 border border-gray-600">
+                        <h3 className="text-white font-semibold mb-2">Lighting</h3>
+                        <p className="text-white/70 text-sm">Ambient light for overall illumination and point light for shadows</p>
+                      </div>
+                      <div className="bg-gray-800 rounded-lg p-4 border border-gray-600">
+                        <h3 className="text-white font-semibold mb-2">Renderer</h3>
+                        <p className="text-white/70 text-sm">WebGL renderer with antialiasing and shadow mapping enabled</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </HoleBackground>
-            </div>
+              </>
+            ) : activeSection === 'earth' ? (
+              <>
+                {/* Earth Particle System Section */}
+                <div className="flex-1 p-4 overflow-y-auto">
+                  <div className="h-full">
+                    {/* Header */}
+                    <div className="mb-6">
+                      <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
+                        Earth Particle System
+                      </h1>
+                      <p className="text-white/70 text-base">100,000 particles positioned on a sphere with Earth texture sampling</p>
+                    </div>
 
-            {/* Right Sidebar - Selected NFT Details with Earth Background */}
-            <div className="w-80 hidden lg:block">
-              <EarthBackground className="h-full">
-                <div className="relative z-10 h-full p-4">
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-white mb-4">Selected NFT</h3>
+                    {/* Earth Particle Scene */}
+                    <div className="bg-gray-900 rounded-xl border border-gray-600 overflow-hidden">
+                      <EarthParticleSystem className="w-full h-96" />
+                    </div>
 
-                    {selectedNFT !== null && (
-                      <div className="bg-gray-800 rounded-xl p-4 border border-gray-600">
-                        {/* NFT Image */}
-                        <div className="w-full h-32 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg mb-4 flex items-center justify-center">
-                          <div className="text-center">
-                            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto mb-2"></div>
-                            <p className="text-white font-semibold text-lg">{tiers[selectedNFT].name}</p>
-                            <p className="text-white/70 text-sm">Cosmic Collection</p>
-                          </div>
-                        </div>
+                    {/* Particle System Info */}
+                    <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="bg-gray-800 rounded-lg p-4 border border-gray-600">
+                        <h3 className="text-white font-semibold mb-2">Particles</h3>
+                        <p className="text-white/70 text-sm">100,000 particles positioned on sphere surface using spherical coordinates</p>
+                      </div>
+                      <div className="bg-gray-800 rounded-lg p-4 border border-gray-600">
+                        <h3 className="text-white font-semibold mb-2">Texture Sampling</h3>
+                        <p className="text-white/70 text-sm">UV coordinates computed from spherical coordinates to sample Earth texture</p>
+                      </div>
+                      <div className="bg-gray-800 rounded-lg p-4 border border-gray-600">
+                        <h3 className="text-white font-semibold mb-2">Buffer Geometry</h3>
+                        <p className="text-white/70 text-sm">Efficient BufferGeometry with position, color, and size attributes</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* NFT Gallery with 3D Earth Background */}
+                <div className="flex-1 relative">
+                  <ThreeDEarth className="absolute inset-0">
+                    <div className="absolute inset-0 z-10 p-4 overflow-y-auto">
+                      {/* Header */}
+                      <div className="mb-6">
+                        <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
+                          NFT Lottery System
+                        </h1>
+                        <p className="text-white/70 text-base">Mint NFTs and enter the weighted lottery</p>
+                      </div>
 
-                        {/* NFT Details */}
-                        <div className="space-y-3">
-                          <div className="flex justify-between text-sm">
-                            <span className="text-white/70">Base Price</span>
-                            <span className="text-white font-semibold">{tiers[selectedNFT].basePrice} ETH</span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-white/70">Payment Price</span>
-                            <span className="text-white font-semibold">{tiers[selectedNFT].paymentPrice} ETH</span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-white/70">Weight</span>
-                            <span className="text-white">{tiers[selectedNFT].weight}</span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-white/70">Rarity</span>
-                            <span className="text-white">{tiers[selectedNFT].weight > 5 ? 'Rare' : 'Common'}</span>
-                          </div>
-
-                          {/* Mint Button */}
-                          <button className="w-full mt-4 px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg text-white text-base font-semibold hover:from-purple-400 hover:to-pink-400 transition-all duration-300">
-                            Mint NFT
-                          </button>
-
-                          {/* Stats */}
-                          <div className="pt-4 border-t border-gray-600">
-                            <div className="grid grid-cols-2 gap-4 text-sm">
+                      {/* NFT Grid */}
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                        {tiers.map((tier, index) => (
+                          <motion.div
+                            key={tier.id}
+                            onClick={() => setSelectedNFT(index)}
+                            className={`bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-gray-600/50 cursor-pointer transition-all duration-200 hover:bg-gray-700/90 hover:scale-105 ${selectedNFT === index ? 'ring-2 ring-purple-500 bg-gray-700/90' : ''
+                              }`}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            {/* NFT Image Placeholder */}
+                            <div className="w-full h-24 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg mb-3 flex items-center justify-center">
                               <div className="text-center">
-                                <p className="text-white/70">Total Supply</p>
-                                <p className="text-white font-semibold">{contractData.totalSupply}</p>
+                                <div className={`w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto mb-2`}></div>
+                                <p className="text-white font-semibold text-sm">{tier.name}</p>
                               </div>
-                              <div className="text-center">
-                                <p className="text-white/70">Max Supply</p>
-                                <p className="text-white font-semibold">{contractData.maxSupply}</p>
+                            </div>
+
+                            {/* NFT Info */}
+                            <div className="space-y-2">
+                              {/* Lottery Weight */}
+                              <div className="flex justify-between text-sm">
+                                <span className="text-white/70">Lottery Weight</span>
+                                <span className="text-white font-semibold">{tier.weight}x</span>
+                              </div>
+
+                              {/* Pricing Options */}
+                              <div className="space-y-1">
+                                <div className="flex justify-between text-xs">
+                                  <span className="text-white/70">ETH</span>
+                                  <span className="text-white">{tier.basePrice}</span>
+                                </div>
+                                <div className="flex justify-between text-xs">
+                                  <span className="text-white/70">Token 1</span>
+                                  <span className="text-white">{tier.paymentPrice}</span>
+                                </div>
+                                <div className="flex justify-between text-xs">
+                                  <span className="text-white/70">Token 2</span>
+                                  <span className="text-white">{tier.anotherPrice}</span>
+                                </div>
+                              </div>
+
+                              {/* Action Buttons */}
+                              <div className="space-y-2">
+                                <button className="w-full px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg text-white text-base font-semibold hover:from-purple-400 hover:to-pink-400 transition-all duration-300">
+                                  Mint NFT
+                                </button>
+                              </div>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  </ThreeDEarth>
+                </div>
+
+                {/* Right Sidebar - Selected NFT Details */}
+                <div className="w-80 hidden lg:block bg-gray-900/80 backdrop-blur-xl border-l border-white/10">
+                  <div className="h-full p-4">
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold text-white mb-4">Selected NFT</h3>
+
+                      {selectedNFT !== null && (
+                        <div className="bg-gray-800 rounded-xl p-4 border border-gray-600">
+                          {/* NFT Image */}
+                          <div className="w-full h-32 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg mb-4 flex items-center justify-center">
+                            <div className="text-center">
+                              <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto mb-2"></div>
+                              <p className="text-white font-semibold text-lg">{tiers[selectedNFT].name}</p>
+                              <p className="text-white/70 text-sm">NFT Lottery Collection</p>
+                            </div>
+                          </div>
+
+                          {/* NFT Details */}
+                          <div className="space-y-3">
+                            {/* Lottery Weight */}
+                            <div className="flex justify-between text-sm">
+                              <span className="text-white/70">Lottery Weight</span>
+                              <span className="text-white font-semibold">{tiers[selectedNFT].weight}x</span>
+                            </div>
+
+                            {/* Pricing Options */}
+                            <div className="space-y-2">
+                              <div className="flex justify-between text-sm">
+                                <span className="text-white/70">ETH Price</span>
+                                <span className="text-white font-semibold">{tiers[selectedNFT].basePrice} ETH</span>
+                              </div>
+                              <div className="flex justify-between text-sm">
+                                <span className="text-white/70">Token 1 Price</span>
+                                <span className="text-white font-semibold">{tiers[selectedNFT].paymentPrice}</span>
+                              </div>
+                              <div className="flex justify-between text-sm">
+                                <span className="text-white/70">Token 2 Price</span>
+                                <span className="text-white font-semibold">{tiers[selectedNFT].anotherPrice}</span>
+                              </div>
+                            </div>
+
+                            {/* NFT Properties */}
+                            <div className="pt-2 border-t border-gray-600">
+                              <div className="grid grid-cols-2 gap-2 text-xs">
+                                <div className="text-center">
+                                  <p className="text-white/70">Soulbound</p>
+                                  <p className="text-white">Yes</p>
+                                </div>
+                                <div className="text-center">
+                                  <p className="text-white/70">Burnable</p>
+                                  <p className="text-white">Yes</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="space-y-2">
+                              <button className="w-full px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg text-white text-base font-semibold hover:from-purple-400 hover:to-pink-400 transition-all duration-300">
+                                Mint NFT
+                              </button>
+                            </div>
+
+                            {/* Lottery Stats */}
+                            <div className="pt-4 border-t border-gray-600">
+                              <div className="grid grid-cols-2 gap-4 text-sm">
+                                <div className="text-center">
+                                  <p className="text-white/70">Total Weight</p>
+                                  <p className="text-white font-semibold">{contractData.totalCumulativeWeight}</p>
+                                </div>
+                                <div className="text-center">
+                                  <p className="text-white/70">Entries</p>
+                                  <p className="text-white font-semibold">{contractData.lotteryEntries}</p>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </div>
-              </EarthBackground>
-            </div>
+              </>
+            )}
           </div>
         </div>
       </div>

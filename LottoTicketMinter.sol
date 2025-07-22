@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
@@ -14,7 +15,7 @@ import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
  *      Allows minting with base blockchain token or ERC20 tokens, with settable prices and weights for tiers.
  *      Includes a decentralized lottery system based on NFT weight.
  */
-contract NFTLotteryMintingTierV11 is Initializable, ERC721Upgradeable, OwnableUpgradeable {
+contract NFTLotteryMintingTierV11 is Initializable, ERC721Upgradeable, OwnableUpgradeable, UUPSUpgradeable {
     using AddressUpgradeable for address;
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
@@ -61,6 +62,7 @@ contract NFTLotteryMintingTierV11 is Initializable, ERC721Upgradeable, OwnableUp
     function initialize() public initializer {
         __ERC721_init("NFTLotteryMintingTierV11", "NFTTV11");
         __Ownable_init();
+        __UUPSUpgradeable_init();
 
         // Initialize tier weights and prices
         for (uint256 i = 0; i < 10; i++) {
@@ -73,6 +75,11 @@ contract NFTLotteryMintingTierV11 is Initializable, ERC721Upgradeable, OwnableUp
         }
         totalCumulativeWeight = 0;  // Initialize total cumulative weight
     }
+
+    /**
+     * @dev Required by the OZ UUPS module.
+     */
+    function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
     // Modifiers
     modifier onlyValidTier(uint256 tier) {
