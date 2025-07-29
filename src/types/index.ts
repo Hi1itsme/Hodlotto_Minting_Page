@@ -5,6 +5,7 @@ export interface Tier {
   basePrice: number;
   paymentPrice: number;
   anotherPrice: number;
+  icon: string;
 }
 
 export interface LottoEntry {

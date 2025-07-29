@@ -14,18 +14,18 @@ function App() {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [selectedNFT, setSelectedNFT] = useState(0);
 
-  // Updated NFT tiers with lottery system data
+  // Updated NFT tiers with planet themes and lottery system data (Icon_3 version)
   const tiers: Tier[] = [
-    { id: 0, name: "Tier 0", weight: 1, basePrice: 0.01, paymentPrice: 0.015, anotherPrice: 0.02 },
-    { id: 1, name: "Tier 1", weight: 2, basePrice: 0.02, paymentPrice: 0.03, anotherPrice: 0.04 },
-    { id: 2, name: "Tier 2", weight: 4, basePrice: 0.04, paymentPrice: 0.06, anotherPrice: 0.08 },
-    { id: 3, name: "Tier 3", weight: 8, basePrice: 0.08, paymentPrice: 0.12, anotherPrice: 0.16 },
-    { id: 4, name: "Tier 4", weight: 16, basePrice: 0.16, paymentPrice: 0.24, anotherPrice: 0.32 },
-    { id: 5, name: "Tier 5", weight: 32, basePrice: 0.32, paymentPrice: 0.48, anotherPrice: 0.64 },
-    { id: 6, name: "Tier 6", weight: 64, basePrice: 0.64, paymentPrice: 0.96, anotherPrice: 1.28 },
-    { id: 7, name: "Tier 7", weight: 128, basePrice: 1.28, paymentPrice: 1.92, anotherPrice: 2.56 },
-    { id: 8, name: "Tier 8", weight: 256, basePrice: 2.56, paymentPrice: 3.84, anotherPrice: 5.12 },
-    { id: 9, name: "Tier 9", weight: 512, basePrice: 5.12, paymentPrice: 7.68, anotherPrice: 10.24 }
+    { id: 0, name: "Mercury", weight: 1, basePrice: 0.01, paymentPrice: 0.015, anotherPrice: 0.02, icon: "/Mercury_Icon_3.png" },
+    { id: 1, name: "Venus", weight: 2, basePrice: 0.02, paymentPrice: 0.03, anotherPrice: 0.04, icon: "/Venus_Icon_3.png" },
+    { id: 2, name: "Earth", weight: 4, basePrice: 0.04, paymentPrice: 0.06, anotherPrice: 0.08, icon: "/Earth_Icon_3.png" },
+    { id: 3, name: "Mars", weight: 8, basePrice: 0.08, paymentPrice: 0.12, anotherPrice: 0.16, icon: "/Mars_Icon_3.png" },
+    { id: 4, name: "Jupiter", weight: 16, basePrice: 0.16, paymentPrice: 0.24, anotherPrice: 0.32, icon: "/Jupiter_Icon_3.png" },
+    { id: 5, name: "Saturn", weight: 32, basePrice: 0.32, paymentPrice: 0.48, anotherPrice: 0.64, icon: "/Saturn_Icon_3.png" },
+    { id: 6, name: "Neptune", weight: 64, basePrice: 0.64, paymentPrice: 0.96, anotherPrice: 1.28, icon: "/Neptune_Icon_2.png" },
+    { id: 7, name: "Uranus", weight: 128, basePrice: 1.28, paymentPrice: 1.92, anotherPrice: 2.56, icon: "/Uranus_Icon_3.png" },
+    { id: 8, name: "Pluto", weight: 256, basePrice: 2.56, paymentPrice: 3.84, anotherPrice: 5.12, icon: "/Pluto_Icon.png" },
+    { id: 9, name: "Moon", weight: 512, basePrice: 5.12, paymentPrice: 7.68, anotherPrice: 10.24, icon: "/Moon_Icon_3.png" }
   ];
 
   // Mock contract data
@@ -313,10 +313,21 @@ function App() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                           >
-                            {/* NFT Image Placeholder */}
+                            {/* Planet Icon */}
                             <div className="w-full h-24 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg mb-3 flex items-center justify-center">
                               <div className="text-center">
-                                <div className={`w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto mb-2`}></div>
+                                <img
+                                  src={tier.icon}
+                                  alt={tier.name}
+                                  className="w-12 h-12 mx-auto mb-2 object-contain"
+                                  onError={(e) => {
+                                    // Fallback to a colored circle if image fails to load
+                                    const target = e.target as HTMLImageElement;
+                                    target.style.display = 'none';
+                                    target.nextElementSibling?.classList.remove('hidden');
+                                  }}
+                                />
+                                <div className={`w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto mb-2 hidden`}></div>
                                 <p className="text-white font-semibold text-sm">{tier.name}</p>
                               </div>
                             </div>
@@ -367,12 +378,23 @@ function App() {
 
                       {selectedNFT !== null && (
                         <div className="bg-gray-800 rounded-xl p-4 border border-gray-600">
-                          {/* NFT Image */}
+                          {/* Planet Icon */}
                           <div className="w-full h-32 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg mb-4 flex items-center justify-center">
                             <div className="text-center">
-                              <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto mb-2"></div>
+                              <img
+                                src={tiers[selectedNFT].icon}
+                                alt={tiers[selectedNFT].name}
+                                className="w-16 h-16 mx-auto mb-2 object-contain"
+                                onError={(e) => {
+                                  // Fallback to a colored circle if image fails to load
+                                  const target = e.target as HTMLImageElement;
+                                  target.style.display = 'none';
+                                  target.nextElementSibling?.classList.remove('hidden');
+                                }}
+                              />
+                              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto mb-2 hidden"></div>
                               <p className="text-white font-semibold text-lg">{tiers[selectedNFT].name}</p>
-                              <p className="text-white/70 text-sm">NFT Lottery Collection</p>
+                              <p className="text-white/70 text-sm">Planet NFT Collection</p>
                             </div>
                           </div>
 
