@@ -14,18 +14,18 @@ function App() {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [selectedNFT, setSelectedNFT] = useState(0);
 
-  // Updated NFT tiers with planet themes and lottery system data (Icon_3 version)
+  // Updated NFT tiers with planet themes and lottery system data (Icon_2 version)
   const tiers: Tier[] = [
-    { id: 0, name: "Mercury", weight: 1, basePrice: 0.01, paymentPrice: 0.015, anotherPrice: 0.02, icon: "/Mercury_Icon_3.png" },
-    { id: 1, name: "Venus", weight: 2, basePrice: 0.02, paymentPrice: 0.03, anotherPrice: 0.04, icon: "/Venus_Icon_3.png" },
-    { id: 2, name: "Earth", weight: 4, basePrice: 0.04, paymentPrice: 0.06, anotherPrice: 0.08, icon: "/Earth_Icon_3.png" },
-    { id: 3, name: "Mars", weight: 8, basePrice: 0.08, paymentPrice: 0.12, anotherPrice: 0.16, icon: "/Mars_Icon_3.png" },
-    { id: 4, name: "Jupiter", weight: 16, basePrice: 0.16, paymentPrice: 0.24, anotherPrice: 0.32, icon: "/Jupiter_Icon_3.png" },
-    { id: 5, name: "Saturn", weight: 32, basePrice: 0.32, paymentPrice: 0.48, anotherPrice: 0.64, icon: "/Saturn_Icon_3.png" },
+    { id: 0, name: "Mercury", weight: 1, basePrice: 0.01, paymentPrice: 0.015, anotherPrice: 0.02, icon: "/Mercury_Icon_2.png" },
+    { id: 1, name: "Venus", weight: 2, basePrice: 0.02, paymentPrice: 0.03, anotherPrice: 0.04, icon: "/Venus_Icon_2.png" },
+    { id: 2, name: "Earth", weight: 4, basePrice: 0.04, paymentPrice: 0.06, anotherPrice: 0.08, icon: "/Earth_Icon_2.png" },
+    { id: 3, name: "Mars", weight: 8, basePrice: 0.08, paymentPrice: 0.12, anotherPrice: 0.16, icon: "/Mars_Icon_2.png" },
+    { id: 4, name: "Jupiter", weight: 16, basePrice: 0.16, paymentPrice: 0.24, anotherPrice: 0.32, icon: "/Jupiter_Icon_2.png" },
+    { id: 5, name: "Saturn", weight: 32, basePrice: 0.32, paymentPrice: 0.48, anotherPrice: 0.64, icon: "/Saturn_Icon_2.png" },
     { id: 6, name: "Neptune", weight: 64, basePrice: 0.64, paymentPrice: 0.96, anotherPrice: 1.28, icon: "/Neptune_Icon_2.png" },
-    { id: 7, name: "Uranus", weight: 128, basePrice: 1.28, paymentPrice: 1.92, anotherPrice: 2.56, icon: "/Uranus_Icon_3.png" },
+    { id: 7, name: "Uranus", weight: 128, basePrice: 1.28, paymentPrice: 1.92, anotherPrice: 2.56, icon: "/Uranus_Icon.png" },
     { id: 8, name: "Pluto", weight: 256, basePrice: 2.56, paymentPrice: 3.84, anotherPrice: 5.12, icon: "/Pluto_Icon.png" },
-    { id: 9, name: "Moon", weight: 512, basePrice: 5.12, paymentPrice: 7.68, anotherPrice: 10.24, icon: "/Moon_Icon_3.png" }
+    { id: 9, name: "Moon", weight: 512, basePrice: 5.12, paymentPrice: 7.68, anotherPrice: 10.24, icon: "/Moon_Icon_2.png" }
   ];
 
   // Mock contract data
